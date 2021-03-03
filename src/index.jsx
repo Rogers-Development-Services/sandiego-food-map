@@ -1,7 +1,7 @@
 import './style.css';
 
 // React
-import React, { useEffect } from "react";
+import React, { useEffect, useState, Fragment, forwardRef } from "react";
 import ReactDOM from "react-dom";
 
 // Leaflet Style and JS for React
@@ -13,7 +13,7 @@ import MarkerClusterGroup from 'react-leaflet-markercluster';
 
 // React and MAterial - UI
 import clsx from 'clsx';
-import CssBaseline from '@material-ui/core/CssBaseline';
+import CssBaseline from '@material-ui/core/CssBaseline'; 
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import AppBar from '@material-ui/core/AppBar';
@@ -74,7 +74,7 @@ const useStyles = makeStyles((theme) => ({
     }),
   },
   menuButton: {
-    marginRight: theme.spacing(2),
+    marginRight: theme.spacing(2), // https://material-ui.com/customization/spacing/
   },
   title: {
     flexGrow: 1,
@@ -125,17 +125,17 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Transition = React.forwardRef(function Transition(props, ref) {
+const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 function FoodMap(){
     const classes = useStyles();
     const theme = useTheme();
-    const [open, setOpen] = React.useState(false);
-    const [data, setData] = React.useState([])
-    const [filters, setFilters] = React.useState({Service_Status__c:"Active"})
-    const [detail, setDetail] = React.useState(null);
+    const [open, setOpen] = useState(false);
+    const [data, setData] = useState([])
+    const [filters, setFilters] = useState({Service_Status__c:"Active"})
+    const [detail, setDetail] = useState(null);
 
     const handleDataLoaded = (data) => {
         setData(data)
@@ -170,9 +170,9 @@ function FoodMap(){
 
 
     // Processed data
-    const filtered_list = data.filter((d) => {
-        for( var k in filters){
-            if( d[k] != filters[k]){ 
+    const filtered_list = data.filter((agency) => {
+        for( var prop in filters){
+            if( agency[prop] != filters[prop]){ 
                 return false 
             }
         }
@@ -259,9 +259,9 @@ function FoodMap(){
         </Dialog>
     ):null
 
-    // Return our fragment
+    // Return our fragment https://reactjs.org/docs/fragments.html
     return (
-        <React.Fragment>
+        <Fragment>
             <CssBaseline />
             <AppBar>
                 <Toolbar>
@@ -319,7 +319,7 @@ function FoodMap(){
                     scrollWheelZoom={true}
                     className={ classes.map }
                 >
-                    <ZoomControl position="bottomleft" />
+                    <ZoomControl position="bottomright" />
                     <TileLayer
                         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -328,7 +328,7 @@ function FoodMap(){
                 </MapContainer>
             </main>
             {detailDialog}
-        </React.Fragment>
+        </Fragment>
     )
 }
 
